@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Better NYS Login",
+  "version": "1.0.0",
+  "description": "Replaces the NYS login portal image with a random one from a local library.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://fs.svc.ny.gov/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["images/*.jpg", "images/refresh-icon.svg"],
+      "matches": ["https://fs.svc.ny.gov/*"]
+    }
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+} 
