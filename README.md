@@ -4,8 +4,8 @@ This extension replaces the standard image on the NY State Employee login portal
 
 ## Installation
 
-1. Clone or download this repository.
-2. Open Chrome and go to `chrome://extensions/`.
+1. Clone this repository or [download and uncompress it](https://github.com/plasticmind/extension-better-nys-login/archive/refs/heads/main.zip).
+2. Open Chrome and visit `chrome://extensions/`.
 3. Enable "Developer mode" (top right).
 4. Click "Load unpacked" and select this folder.
 
