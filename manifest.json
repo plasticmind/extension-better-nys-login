@@ -13,7 +13,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["images/*.jpg", "images/refresh-icon.svg"],
+      "resources": ["images/*.jpg", "images/refresh-icon.svg", "fonts/*.woff2", "fonts/*.woff"],
       "matches": ["https://fs.svc.ny.gov/*"]
     }
   ],
