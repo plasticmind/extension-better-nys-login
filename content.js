@@ -141,6 +141,49 @@ function pickRandomImage() {
   return images[Math.floor(Math.random() * images.length)];
 }
 
+// Remove hardcoded tabindex attributes — let DOM order control focus
+document.querySelectorAll('#userNameInput, #passwordInput, #kmsiInput, #submitButton').forEach(
+  (el) => el.removeAttribute('tabindex')
+);
+
+// Add show/hide toggle to the password input
+const passwordInput = document.querySelector('#passwordInput');
+if (passwordInput) {
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.setAttribute('aria-label', 'Show password');
+  toggle.className = 'nys-password-toggle';
+
+  const eyeOpen = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const eyeClosed = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+
+  toggle.innerHTML = eyeOpen;
+
+  toggle.addEventListener('click', () => {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    toggle.innerHTML = isHidden ? eyeClosed : eyeOpen;
+    toggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    passwordInput.focus();
+  });
+
+  // Insert right after the input so DOM order gives correct tab sequence
+  passwordInput.after(toggle);
+
+  // Re-mask password on submit
+  const resetToPassword = () => {
+    if (passwordInput.type !== 'password') {
+      passwordInput.type = 'password';
+      toggle.innerHTML = eyeOpen;
+      toggle.setAttribute('aria-label', 'Show password');
+    }
+  };
+  const submitBtn = document.querySelector('#submitButton');
+  if (submitBtn) submitBtn.addEventListener('click', resetToPassword);
+  const form = passwordInput.closest('form');
+  if (form) form.addEventListener('submit', resetToPassword);
+}
+
 // Prevent Chrome from offering to save the RSA passcode as a password.
 // Changing type to "text" alone isn't enough — Chrome also detects forms with
 // username + submittable fields. We neutralize form-level autocomplete and
@@ -439,6 +482,39 @@ if (passcodeInput) {
 
     input.text::placeholder {
       color: var(--nys-color-text-weaker) !important;
+    }
+
+    /* Password show/hide toggle positioning */
+    #passwordArea {
+      position: relative !important;
+    }
+
+    #passwordInput {
+      padding-right: 36px !important;
+    }
+
+    .nys-password-toggle {
+      position: absolute !important;
+      right: 8px !important;
+      top: 7px !important;
+      background: none !important;
+      border: none !important;
+      cursor: pointer !important;
+      padding: 4px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: var(--nys-color-neutral-500) !important;
+    }
+
+    .nys-password-toggle:hover {
+      color: var(--nys-color-neutral-700) !important;
+    }
+
+    .nys-password-toggle:focus-visible {
+      outline: solid var(--nys-border-width-md) var(--nys-color-focus) !important;
+      outline-offset: 2px !important;
+      border-radius: var(--nys-radius-sm) !important;
     }
 
     /* Mask passcode entry like a password field without triggering Chrome's save prompt */
